@@ -1,8 +1,10 @@
-import { useState } from "react"
+import {useState } from "react"
 
 const AddBookForm = () => {
 
     const [isAdded,setisAdded] = useState(false)
+
+    const [listOfMovie,setListOfMovie] = useState([])
 
     const [formData,setFormData] = useState({
         title:"",
@@ -43,6 +45,8 @@ const AddBookForm = () => {
             console.log("Added movie",data)
 
             setisAdded(true)
+
+            setListOfMovie((prev)=>[...prev,data.newBookData.title])
 
         } catch(err) {
             console.log(err)
@@ -120,8 +124,22 @@ const AddBookForm = () => {
 
             
         </form>
+
+        {listOfMovie.length > 0 && <h1>List of added movies</h1>}
+        {listOfMovie &&  listOfMovie.map((movie)=>{
+            return (
+                <ul key={movie}>
+                <li>
+                {movie}
+                </li>
+                </ul>
+            )
+        })}
+
+
+
         {isAdded && <><h1>New Movie Added successfully</h1>
-        <ul>
+        <ul key={isAdded._id}>
             <li>Title : {formData.title}</li>
             <li>Author : {formData.author}</li>
             <li>Publish Year : {formData.publishedYear}</li>
@@ -132,7 +150,16 @@ const AddBookForm = () => {
             <li>Summary : {formData.summary}</li>
         </ul>
             </>}
+
+
+        
+
+        
+
+
         </div>
+
+        
 
     )
 
