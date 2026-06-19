@@ -2,6 +2,8 @@ import { useState } from "react"
 
 const AddBookForm = () => {
 
+    const [isAdded,setisAdded] = useState(false)
+
     const [formData,setFormData] = useState({
         title:"",
         author:"",
@@ -39,6 +41,8 @@ const AddBookForm = () => {
             const data = await response.json()
 
             console.log("Added movie",data)
+
+            setisAdded(true)
 
         } catch(err) {
             console.log(err)
@@ -113,7 +117,21 @@ const AddBookForm = () => {
 
 
             <button>Submit</button>
+
+            
         </form>
+        {isAdded && <><h1>New Movie Added successfully</h1>
+        <ul>
+            <li>Title : {formData.title}</li>
+            <li>Author : {formData.author}</li>
+            <li>Publish Year : {formData.publishedYear}</li>
+            <li>Gnere : {formData.genre}</li>
+            <li>Language : {formData.language}</li>
+            <li>Country : {formData.country}</li>
+            <li>Rating : {formData.rating}</li>
+            <li>Summary : {formData.summary}</li>
+        </ul>
+            </>}
         </div>
 
     )
