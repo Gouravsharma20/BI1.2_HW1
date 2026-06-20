@@ -54,6 +54,13 @@ const AddBookForm = () => {
         }
 
     }
+
+
+    const handleDelete = (movieToDelete) => {
+    setListOfMovie((prev) =>
+        prev.filter((movie) => movie !== movieToDelete)
+    );
+};
     
     return (
         <div>
@@ -131,6 +138,9 @@ const AddBookForm = () => {
                 <ul key={movie}>
                 <li>
                 {movie}
+                <button onClick={() => handleDelete(movie)}>
+                Delete
+                </button>
                 </li>
                 </ul>
             )
