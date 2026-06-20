@@ -1,10 +1,12 @@
-import {useState } from "react"
+import {use, useState } from "react"
 
 const AddBookForm = () => {
 
     const [isAdded,setisAdded] = useState(false)
 
-    const [listOfMovie,setListOfMovie] = useState([])
+    const [listOfBook,setListOfBook] = useState([])
+
+    const [successMessage,setSuccessMessage] = useState("")
 
     const [formData,setFormData] = useState({
         title:"",
@@ -46,7 +48,7 @@ const AddBookForm = () => {
 
             setisAdded(true)
 
-            setListOfMovie((prev)=>[...prev,data.newBookData.title])
+            setListOfBook((prev)=>[...prev,data.newBookData])
 
         } catch(err) {
             console.log(err)
@@ -55,16 +57,31 @@ const AddBookForm = () => {
 
     }
 
+    const handleDelete = async (bookId) => {
+        console.log("Deleting:", bookId)
+        try {
+            const response = await fetch(`https://be-4-assignment1-navy.vercel.app/deleteBook/${bookId}`,{method:"DELETE"})
 
-    const handleDelete = (movieToDelete) => {
-    setListOfMovie((prev) =>
-        prev.filter((movie) => movie !== movieToDelete)
-    );
-};
+            if (!response.ok) {
+                throw "Failed to delete movie"
+            }
+
+            const data = await response.json()
+
+            if (data) {
+                setSuccessMessage("Movie deleted successfully ")
+                setListOfBook((prev) =>prev.filter((book) => book._id !== bookId)
+    )
+            }
+
+        } catch(err) {
+            console.log(err)
+        }
+    }
     
     return (
         <div>
-        <h2>Add New Movie</h2>
+        <h2>Add New Book</h2>
         <form onSubmit={handleSubmit}>
             <label>Title</label>
             <input type="text" name="title" value={formData.title} onChange = {handleChange}/>
@@ -132,23 +149,30 @@ const AddBookForm = () => {
             
         </form>
 
-        {listOfMovie.length > 0 && <h1>List of added movies</h1>}
-        {listOfMovie &&  listOfMovie.map((movie)=>{
+        {listOfBook.length > 0 && <h1>List of added movies</h1>}
+        {listOfBook &&  listOfBook.map((book)=>{
             return (
-                <ul key={movie}>
+                <>
+                <ul key={book._id}>
                 <li>
-                {movie}
-                <button onClick={() => handleDelete(movie)}>
+                {book.title}
+                <button onClick={() => handleDelete(book._id)}>
                 Delete
                 </button>
                 </li>
                 </ul>
+                <p>{successMessage}</p>
+                </>
+
+                
+                
+                
             )
         })}
 
 
 
-        {isAdded && <><h1>New Movie Added successfully</h1>
+        {isAdded && <><h1>New Book Added successfully</h1>
         <ul key={isAdded._id}>
             <li>Title : {formData.title}</li>
             <li>Author : {formData.author}</li>
